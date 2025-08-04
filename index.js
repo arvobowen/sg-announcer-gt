@@ -68,9 +68,15 @@ app.post('/github-webhook', (req, res) => {
             "type": "AdaptiveCard",
             "body": [
               {
+                "type": "Image",
+                "style": "RoundedCorners",
+                "horizontalAlignment": "Right",
+                "url": "https://raw.githubusercontent.com/KofileDev/georgia-public-assets/main/github-teams-bot/announcement-banner.png"
+              },
+              {
                 "type": "TextBlock",
                 "size": "Medium",
-                "weight": "Bolder",
+                "weight": "bolder",
                 "text": `New ${releaseType}: ${release.name}`
               },
               {
@@ -104,6 +110,13 @@ app.post('/github-webhook', (req, res) => {
                         "text": `Repository: ${req.body.repository.full_name}`,
                         "isSubtle": true,
                         "wrap": true
+                      },
+                      {
+                        "type": "TextBlock",
+                        "spacing": "None",
+                        "text": `Visibility: ${req.body.repository.visibility}`,
+                        "isSubtle": true,
+                        "wrap": true
                       }
                     ]
                   }
@@ -118,12 +131,18 @@ app.post('/github-webhook', (req, res) => {
             "actions": [
               {
                 "type": "Action.OpenUrl",
-                "title": "View Release",
+                "title": "View Release Information",
                 "url": release.html_url
+              },
+              {
+                "type": "Action.OpenUrl",
+                "title": "Release History",
+                "url": `${req.body.repository.html_url}/releases`
               }
             ],
             "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            "version": "1.2"
+            "version": "1.5",
+            "speak": `New ${releaseType}: ${release.name}`
           }
         }
       ]
