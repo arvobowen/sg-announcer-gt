@@ -10,6 +10,10 @@ This is a simple and efficient Node.js application that listens for new GitHub r
 * **Self-Hosted & Cost-Effective:** Runs on a private server, avoiding the need for third-party services or premium connectors.
 * **Secure:** Manages secret webhook URLs safely using environment variables.
 
+## 🎬 Demonstration
+
+![Bot Demo](./assets/demo.png)
+
 ## 🚀 Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
