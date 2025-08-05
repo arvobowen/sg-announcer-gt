@@ -1,0 +1,65 @@
+# .github/workflows/deploy.yml
+
+name: Deploy to Production
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create .env file
+        run: |
+          echo "TEAMS_RELEASE_WEBHOOK_URL=${{ secrets.TEAMS_RELEASE_WEBHOOK_URL }}" >> .env
+          echo "TEAMS_PRERELEASE_WEBHOOK_URL=${{ secrets.TEAMS_PRERELEASE_WEBHOOK_URL }}" >> .env
+
+      - name: Stop Previous Process
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Navigate to the app directory
+            cd /home/github-actions/app/github-teams-bot
+            # Stop the current application process, ignore error if it's not running
+            pm2 stop github-bot || true
+
+      - name: Copy files via scp
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "., !node_modules"
+          target: "/home/github-actions/app/github-teams-bot"
+
+      - name: Restart Server Application
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Navigate to the app directory
+            cd /home/github-actions/app/github-teams-bot
+            # Install production dependencies
+            npm install --production
+            # Restart the application with PM2
+            pm2 start index.js --name github-bot --update-env
+            # Save the process list to resurrect on reboot
+            pm2 save
