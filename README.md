@@ -13,6 +13,7 @@ This is a simple and efficient Node.js application that listens for new GitHub r
 ## 🎬 Demonstration
 
 ![Bot Demo](./assets/demo.png)
+![Bot Demo New Card](./assets/demo-new-card-design.png)
 
 ## 🚀 Getting Started
 
