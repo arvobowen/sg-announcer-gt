@@ -3,16 +3,29 @@
 name: Deploy to Production
 
 on:
+  # Trigger 1: Automatic deployment for stable releases
   release:
     types: [published]
 
+  # Trigger 2: Manual deployment from the Actions tab
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'The git tag to deploy (e.g., v1.0.1-beta)'
+        required: true
+
 jobs:
   deploy:
+    # Only run this job for stable releases, OR for manual triggers
+    if: github.event.release.prerelease == false || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout specific tag
         uses: actions/checkout@v3
+        with:
+          # Use the manually provided tag, or fall back to the release tag
+          ref: ${{ github.event.inputs.tag || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -26,6 +39,7 @@ jobs:
         run: |
           echo "TEAMS_RELEASE_WEBHOOK_URL=${{ secrets.TEAMS_RELEASE_WEBHOOK_URL }}" >> .env
           echo "TEAMS_PRERELEASE_WEBHOOK_URL=${{ secrets.TEAMS_PRERELEASE_WEBHOOK_URL }}" >> .env
+          echo "WEBHOOK_SECRET=${{ secrets.WEBHOOK_SECRET }}" >> .env
 
       - name: Stop Previous Process
         uses: appleboy/ssh-action@master

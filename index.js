@@ -1,5 +1,6 @@
 // Load environment variables from the .env file
 require('dotenv').config();
+const crypto = require('crypto');
 
 // Import necessary libraries
 const express = require('express');
@@ -11,8 +12,31 @@ const app = express();
 // Define the port the server will run on, or use the one from the environment
 const port = process.env.PORT || 3000;
 
+// --- Security Middleware ---
+// This function verifies the signature of the incoming webhook
+const verifyGitHubSignature = (req, res, next) => {
+  const signature = req.get('X-Hub-Signature-256');
+  if (!signature) {
+    return res.status(401).send('No signature provided');
+  }
+
+  const hmac = crypto.createHmac('sha256', process.env.WEBHOOK_SECRET);
+  const digest = 'sha256=' + hmac.update(req.rawBody).digest('hex');
+
+  if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(digest))) {
+    return res.status(401).send('Invalid signature');
+  }
+
+  next();
+};
+
 // Middleware to parse incoming JSON payloads
-app.use(express.json());
+// IMPORTANT: We need the raw body for signature verification, so we use a special setup
+app.use(express.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf;
+  }
+}));
 
 // A helper function to send the message to Teams to avoid duplicate code
 const sendTeamsNotification = (webhookUrl, message) => {
@@ -23,8 +47,8 @@ const sendTeamsNotification = (webhookUrl, message) => {
   return axios.post(webhookUrl, message);
 };
 
-// The main webhook endpoint
-app.post('/github-webhook', (req, res) => {
+// The main webhook endpoint - now protected by our security middleware
+app.post('/github-webhook', verifyGitHubSignature, (req, res) => {
   // Check if the event is a 'published' release
   if (req.body.action === 'published' && req.body.release) {
     const release = req.body.release;
@@ -39,26 +63,6 @@ app.post('/github-webhook', (req, res) => {
     console.log(`New ${releaseType} published: ${release.name} by ${release.author.login}`);
 
     // Prepare the notification card for Microsoft Teams
-    const teamsMessage = {
-      "@type": "MessageCard",
-      "@context": "http://schema.org/extensions",
-      "themeColor": isPrerelease ? "FFA500" : "0076D7", // Orange for pre-release, Blue for release
-      "summary": `New ${releaseType}: ${release.name}`,
-      "sections": [{
-        "activityTitle": `**New ${releaseType}:** [${release.name}](${release.html_url})`,
-        "activitySubtitle": `by ${release.author.login}`,
-        "facts": [{
-          "name": "Repository",
-          "value": req.body.repository.full_name
-        }, {
-          "name": "Tag",
-          "value": release.tag_name
-        }],
-        "text": release.body || "No release notes provided."
-      }]
-    };
-
-    // ** FIX: Wrap the MessageCard in the format the Teams Workflow expects **
     const payloadForTeams = {
       "type": "message",
       "attachments": [
@@ -141,7 +145,7 @@ app.post('/github-webhook', (req, res) => {
               }
             ],
             "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            "version": "1.5",
+            "version": "1.2",
             "speak": `New ${releaseType}: ${release.name}`
           }
         }
