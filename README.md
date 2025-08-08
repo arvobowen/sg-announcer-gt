@@ -10,7 +10,7 @@ This is a SpiderGate Orb that requires the dependancy `spider-gate` to run.  A s
 <h1 align="center">Announcer Orb: GitHub to Teams</h1>
 
 <div align="center">
-  A SpiderGate Orb that listens for new GitHub releases and sends formatted notifications to Microsoft Teams.
+  A SpiderGate Orb that listens for new GitHub releases and sends formatted notifications to Microsoft Teams channels.
 </div>
 
 <div align="center">
