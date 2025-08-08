@@ -1,79 +1,59 @@
-# GitHub Release to Microsoft Teams Bot
+# SpiderGate Orb Module: Announcer - GitHub to Teams
 
-This is a simple and efficient Node.js application that listens for new GitHub releases and automatically posts formatted notifications to designated Microsoft Teams channels. It's designed to differentiate between full releases and pre-releases, routing notifications accordingly.
+This is a SpiderGate Orb that requires the dependancy `spider-gate` to run.  A simple and efficient Node.js application that listens for new GitHub releases and automatically posts formatted notifications to designated Microsoft Teams channels. It's designed to differentiate between full releases and pre-releases, routing notifications accordingly.
+
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/arvobowen/sg-announcer-gt/main/assets/logo.png" alt="Announcer Orb Logo" width="150"/>
+</div>
+
+<h1 align="center">Announcer Orb: GitHub to Teams</h1>
+
+<div align="center">
+  A SpiderGate Orb that listens for new GitHub releases and sends formatted notifications to Microsoft Teams.
+</div>
+
+<div align="center">
+
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge)
+![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=nodedotjs)
+![License](https://img.shields.io/badge/License-CC--BY--NC--SA--4.0-blue?style=for-the-badge)
+
+</div>
+
+---
+
+## 🎯 About This Orb
+
+This is an orb designed for the **[SpiderGate API Server](https://github.com/arvobowen/spider-gate)**. Its purpose is to provide a webhook endpoint that listens for release events from GitHub repositories and posts richly formatted notification cards to designated Microsoft Teams channels.
+
+---
 
 ## ✨ Features
 
-* **Real-time Notifications:** Uses GitHub webhooks to instantly detect when a new release is published.
-* **Release & Pre-release Channels:** Intelligently sends notifications to separate Teams channels for official releases and pre-releases.
-* **Richly Formatted Messages:** Posts clear and informative Adaptive Cards to Teams, including release name, author, repository, tag, and release notes.
-* **Self-Hosted & Cost-Effective:** Runs on a private server, avoiding the need for third-party services or premium connectors.
-* **Secure:** Manages secret webhook URLs safely using environment variables.
+* ✅ **Real-time Notifications:** Uses GitHub webhooks to instantly detect when a new release is published.
+* ✅ **Release & Pre-release Channels:** Intelligently sends notifications to separate Teams channels for official releases and pre-releases.
+* ✅ **Richly Formatted Messages:** Posts clear and informative Adaptive Cards to Teams, including release name, author, repository, tag, and release notes.
+* ✅ **Secure:** Verifies incoming webhook payloads using a shared secret to ensure authenticity.
+* ✅ **Interactive Documentation:** Includes a Swagger UI page for easy testing and documentation.
+
+---
 
 ## 🎬 Demonstration
 
-![Bot Demo](./assets/demo.png)
-![Bot Demo New Card](./assets/demo-new-card-design.png)
+![Demo](./assets/demo.png)
+![Demo New Card](./assets/demo-new-card-design.png)
+
+---
 
 ## 🚀 Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+This project is not a standalone application. It is designed to be run as a module within the **[SpiderGate API Server](https://github.com/arvobowen/spider-gate)**. Please follow the instructions in that repository for setup and installation.
 
-### Prerequisites
+### Configuration
 
-* [Node.js](https://nodejs.org/) (LTS version recommended)
-* A code editor like [VS Code](https://code.visualstudio.com/)
-* Webhook URLs from Microsoft Teams (see Configuration)
-
-### Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/KofileDev/github-teams-bot.git](https://github.com/KofileDev/github-teams-bot.git)
-    cd github-teams-bot
-    ```
-
-2.  **Install NPM packages:**
-    ```bash
-    npm install
-    ```
-
-3.  **Configure your environment variables:**
-    * Create a copy of the example environment file and name it `.env`.
-        ```bash
-        # On Windows
-        copy .env.example .env
-        
-        # On macOS / Linux
-        cp .env.example .env
-        ```
-    * Open the new `.env` file and add your secret webhook URLs from Microsoft Teams.
-
-4.  **Run the development server:**
-    This command uses `nodemon` to automatically restart the server when you save file changes.
-    ```bash
-    npm run dev
-    ```
-    Your server will be running at `http://localhost:3000`.
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-To run this project, you will need to add the following environment variables to your `.env` file:
+To use this orb, you will need to add the following environment variables to your main server's `.env` file:
 
 * `TEAMS_RELEASE_WEBHOOK_URL`: The full URL for the Incoming Webhook configured in your main "Releases" Teams channel.
 * `TEAMS_PRERELEASE_WEBHOOK_URL`: The full URL for the Incoming Webhook configured in your "Pre-releases" Teams channel.
-
-### GitHub Webhook Setup
-
-1.  Navigate to your repository's **Settings > Webhooks**.
-2.  Click **Add webhook**.
-3.  **Payload URL:** Set this to the public URL of your running application (e.g., your ngrok URL for local testing, or your production server URL) followed by `/github-webhook`.
-4.  **Content type:** Set to `application/json`.
-5.  **Which events would you like to trigger this webhook?:** Select "Let me select individual events." and check **Releases**.
-6.  Click **Add webhook**.
-
-## Usage
-
-Once the application is running and the GitHub webhook is configured, simply **publish a new release** in the monitored GitHub repository. The bot will automatically detect the event and post a notification to the appropriate Teams channel based on whether the "This is a pre-release" box was checked.
+* `WEBHOOK_SECRET`: The strong, random string you created to secure your webhook payloads.

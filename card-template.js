@@ -1,0 +1,94 @@
+// card-template.js
+
+const createCardPayload = (release, repository, releaseType) => {
+    return {
+      "type": "message",
+      "attachments": [
+        {
+          "contentType": "application/vnd.microsoft.card.adaptive",
+          "content": {
+            "type": "AdaptiveCard",
+            "body": [
+              {
+                "type": "Image",
+                "url": "https://raw.githubusercontent.com/KofileDev/georgia-public-assets/main/github-teams-bot/announcement-banner.png",
+                "horizontalAlignment": "Right",
+                "style": "RoundedCorners"
+              },
+              {
+                "type": "TextBlock",
+                "size": "Medium",
+                "weight": "bolder",
+                "text": `New ${releaseType}: ${release.name}`
+              },
+              {
+                "type": "ColumnSet",
+                "columns": [
+                  {
+                    "type": "Column",
+                    "width": "auto",
+                    "items": [
+                      {
+                        "type": "Image",
+                        "url": release.author.avatar_url,
+                        "size": "Small",
+                        "style": "Person"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Column",
+                    "width": "stretch",
+                    "items": [
+                      {
+                        "type": "TextBlock",
+                        "weight": "Bolder",
+                        "text": `by ${release.author.login}`,
+                        "wrap": true
+                      },
+                      {
+                        "type": "TextBlock",
+                        "spacing": "None",
+                        "text": `Repository: ${repository.full_name}`,
+                        "isSubtle": true,
+                        "wrap": true
+                      },
+                      {
+                        "type": "TextBlock",
+                        "spacing": "None",
+                        "text": `Visibility: ${repository.visibility}`,
+                        "isSubtle": true,
+                        "wrap": true
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "TextBlock",
+                "text": release.body || "No release notes provided.",
+                "wrap": true
+              }
+            ],
+            "actions": [
+              {
+                "type": "Action.OpenUrl",
+                "title": "View Release Information",
+                "url": release.html_url
+              },
+              {
+                "type": "Action.OpenUrl",
+                "title": "Release History",
+                "url": `${repository.html_url}/releases`
+              }
+            ],
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "version": "1.2",
+            "speak": `New ${releaseType}: ${release.name}`
+          }
+        }
+      ]
+    };
+  };
+  
+  module.exports = { createCardPayload };

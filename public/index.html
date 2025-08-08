@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Georgia API Server</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* A subtle background pattern */
+        .main-bg {
+            background-color: #0d1117;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 2rem 2rem;
+        }
+    </style>
+</head>
+<body class="main-bg text-white flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-2xl mx-auto p-8 text-center">
+        <!-- Main container with a border and shadow -->
+        <div class="bg-gray-900/50 border border-gray-700 rounded-2xl shadow-2xl shadow-blue-500/10 p-8 md:p-12 backdrop-blur-sm">
+            <!-- Icon/Logo -->
+            <div class="mb-6">
+                <svg class="w-16 h-16 mx-auto text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.474-4.474c-.048-.58-.026-1.193-.14-1.743m-2.496 3.03l-4.655-5.653a2.548 2.548 0 113.586-3.586l6.837 5.63" />
+                </svg>
+            </div>
+            <!-- Main Title -->
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-100 mb-4">
+                Georgia API Server
+            </h1>
+            <!-- Subtitle -->
+            <p class="text-lg text-gray-400 mb-8">
+                A dedicated service for handling automated workflows and integrations.
+            </p>
+            <!-- Status Indicator -->
+            <div class="inline-flex items-center bg-green-900/50 text-green-300 border border-green-700 rounded-full px-4 py-2">
+                <span class="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse"></span>
+                Service is Operational
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="mt-8 text-gray-600 text-sm">
+            <p>&copy; 2025 Kofile. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

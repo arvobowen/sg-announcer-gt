@@ -1,5 +1,5 @@
 {
-  "name": "github-teams-bot",
+  "name": "sg-announcer-gt",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,9 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.11.0",
-    "dotenv": "^17.2.1",
-    "express": "^5.1.0"
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "swagger-ui-express": "^5.0.0",
+    "yamljs": "^0.3.0",
+    "spider-gate": "^1.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
