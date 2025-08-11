@@ -72,6 +72,6 @@ router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Export an object containing the path and the router
 module.exports = {
-  path: '/github-teams-announcer',
+  path: '/sg-announcer-gt',
   router: router
 };

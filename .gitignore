@@ -11,3 +11,6 @@ yarn-error.log*
 # Environment variables
 .env
 .env.test
+
+# Notes
+notes.txt
