@@ -50,7 +50,7 @@ If you have already installed SpiderGate and want to install this orb you can us
 ```bash
 sudo -i -u spidergate
 cd ~/server
-spidergate add sg-announcer-gt
+npx spidergate add sg-announcer-gt
 ```
 
 ## 🚀 Getting Started with SpiderGate

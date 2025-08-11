@@ -1,5 +1,6 @@
 // Load environment variables from the .env file
 require('dotenv').config();
+const path = require('path');
 const crypto = require('crypto');
 const express = require('express');
 const axios = require('axios');
@@ -32,6 +33,11 @@ const sendTeamsNotification = (webhookUrl, message) => {
    }
    return axios.post(webhookUrl, message);
 };
+
+// Add this GET route to serve a landing page for the orb
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Define the endpoint for this orb's router
 router.post('/', verifyGitHubSignature, (req, res) => {
