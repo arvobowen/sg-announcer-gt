@@ -1,23 +1,31 @@
 {
   "name": "sg-announcer-gt",
   "version": "1.0.0",
-  "description": "",
+  "description": "A SpiderGate Orb that listens for new GitHub releases and sends formatted notifications to Microsoft Teams channels.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "spider-gate",
+    "orb",
+    "announcer",
+    "github",
+    "teams",
+    "webhook",
+    "notification"
+  ],
+  "author": "Arvo Bowen III <arvo.bowen@gmail.com>",
+  "license": "CC-BY-NC-SA-4.0",
   "dependencies": {
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "swagger-ui-express": "^5.0.0",
     "yamljs": "^0.3.0",
-    "spider-gate": "^1.0.1"
+    "spider-gate": "^1.0.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

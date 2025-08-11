@@ -1,7 +1,10 @@
-# SpiderGate Orb Module: Announcer - GitHub to Teams
+## 🎯 About This Orb (Announcer - GitHub to Teams)
+
+This is an orb designed for the **[SpiderGate API Server](https://github.com/arvobowen/spider-gate)**. Its purpose is to provide a webhook endpoint that listens for release events from GitHub repositories and posts richly formatted notification cards to designated Microsoft Teams channels.
 
 This is a SpiderGate Orb that requires the dependancy `spider-gate` to run.  A simple and efficient Node.js application that listens for new GitHub releases and automatically posts formatted notifications to designated Microsoft Teams channels. It's designed to differentiate between full releases and pre-releases, routing notifications accordingly.
 
+---
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/arvobowen/sg-announcer-gt/main/assets/logo.png" alt="Announcer Orb Logo" width="150"/>
@@ -20,12 +23,6 @@ This is a SpiderGate Orb that requires the dependancy `spider-gate` to run.  A s
 ![License](https://img.shields.io/badge/License-CC--BY--NC--SA--4.0-blue?style=for-the-badge)
 
 </div>
-
----
-
-## 🎯 About This Orb
-
-This is an orb designed for the **[SpiderGate API Server](https://github.com/arvobowen/spider-gate)**. Its purpose is to provide a webhook endpoint that listens for release events from GitHub repositories and posts richly formatted notification cards to designated Microsoft Teams channels.
 
 ---
 
