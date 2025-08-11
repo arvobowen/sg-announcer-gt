@@ -43,7 +43,17 @@ This is a SpiderGate Orb that requires the dependancy `spider-gate` to run.  A s
 
 ---
 
-## 🚀 Getting Started
+## ⚡ Quick setup with npm package manager
+
+If you have already installed SpiderGate and want to install this orb you can use the following commands:
+
+```bash
+sudo -i -u spidergate
+cd ~/server
+spidergate add sg-announcer-gt
+```
+
+## 🚀 Getting Started with SpiderGate
 
 This project is not a standalone application. It is designed to be run as a module within the **[SpiderGate API Server](https://github.com/arvobowen/spider-gate)**. Please follow the instructions in that repository for setup and installation.
 
