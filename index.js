@@ -72,7 +72,7 @@ router.post('/', verifyGitHubSignature, (req, res) => {
 // Add Swagger UI for API Documentation
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./swagger.yaml');
+const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
 
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

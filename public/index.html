@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Georgia API Server</title>
-    <!-- Tailwind CSS for styling -->
+    <title>SG Announcer Orb</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter font from Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,32 +21,45 @@
     </style>
 </head>
 <body class="main-bg text-white flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-2xl mx-auto p-8 text-center">
-        <!-- Main container with a border and shadow -->
+    <div class="w-full max-w-4xl mx-auto p-8 text-center">
         <div class="bg-gray-900/50 border border-gray-700 rounded-2xl shadow-2xl shadow-blue-500/10 p-8 md:p-12 backdrop-blur-sm">
-            <!-- Icon/Logo -->
             <div class="mb-6">
                 <svg class="w-16 h-16 mx-auto text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.474-4.474c-.048-.58-.026-1.193-.14-1.743m-2.496 3.03l-4.655-5.653a2.548 2.548 0 113.586-3.586l6.837 5.63" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                 </svg>
             </div>
-            <!-- Main Title -->
             <h1 class="text-4xl md:text-5xl font-bold text-gray-100 mb-4">
-                Georgia API Server
+                GitHub Announcer Orb
             </h1>
-            <!-- Subtitle -->
-            <p class="text-lg text-gray-400 mb-8">
-                A dedicated service for handling automated workflows and integrations.
+            <p class="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
+                A SpiderGate orb that listens for GitHub release events and sends rich notifications to Microsoft Teams.
             </p>
-            <!-- Status Indicator -->
+            <a href="https://github.com/arvobowen/sg-announcer-gt" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-3 transition-colors duration-200 mb-12">
+                View on GitHub
+            </a>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left mb-12">
+                <div class="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                    <h3 class="font-semibold text-lg text-white mb-2">Listens for Releases</h3>
+                    <p class="text-gray-400 text-sm">Monitors your GitHub repositories for new 'published' release events via a secure webhook.</p>
+                </div>
+                <div class="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                    <h3 class="font-semibold text-lg text-white mb-2">Rich Notifications</h3>
+                    <p class="text-gray-400 text-sm">Sends beautifully formatted Adaptive Cards to Microsoft Teams channels with release details.</p>
+                </div>
+                <div class="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
+                    <h3 class="font-semibold text-lg text-white mb-2">Stable vs. Pre-Release</h3>
+                    <p class="text-gray-400 text-sm">Intelligently routes notifications to different channels based on whether a release is stable or a pre-release.</p>
+                </div>
+            </div>
+
             <div class="inline-flex items-center bg-green-900/50 text-green-300 border border-green-700 rounded-full px-4 py-2">
                 <span class="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse"></span>
-                Service is Operational
+                API Service is Operational
             </div>
         </div>
-        <!-- Footer -->
         <footer class="mt-8 text-gray-600 text-sm">
-            <p>&copy; 2025 Kofile. All rights reserved.</p>
+             <p>&copy; 2025 Kofile. All rights reserved.</p>
         </footer>
     </div>
 </body>
