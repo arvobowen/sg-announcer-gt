@@ -53,6 +53,14 @@ cd ~/server
 npx spidergate add sg-announcer-gt
 ```
 
+To update to the latest version of that orb you can use the commands:
+
+```bash
+sudo -i -u spidergate
+cd ~/server
+npm update sg-announcer-gt
+```
+
 ## 🚀 Getting Started with SpiderGate
 
 This project is not a standalone application. It is designed to be run as a module within the **[SpiderGate API Server](https://github.com/arvobowen/spider-gate)**. Please follow the instructions in that repository for setup and installation.
