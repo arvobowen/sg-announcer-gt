@@ -1,15 +1,18 @@
 openapi: 3.0.0
 info:
-  title: "SpiderGate Announcer - GitHub to Teams"
-  description: "An orb that listens for GitHub release events and sends notifications to Microsoft Teams."
-  version: "1.0.1"
-servers:
-  - url: "https://georgia-api.kofile.com"
+  title: SpiderGate Announcer - GitHub to Teams
+  description: >-
+    An orb that listens for GitHub release events and sends notifications to
+    Microsoft Teams.
+  version: 1.0.1
 paths:
   /sg-announcer-gt:
     post:
-      summary: "GitHub Webhook Receiver"
-      description: "Receives a `POST` request from a GitHub webhook triggered by a release event. It verifies the signature and forwards a formatted message to a Microsoft Teams channel."
+      summary: GitHub Webhook Receiver
+      description: >-
+        Receives a `POST` request from a GitHub webhook triggered by a release
+        event. It verifies the signature and forwards a formatted message to a
+        Microsoft Teams channel.
       requestBody:
         required: true
         content:
@@ -19,15 +22,15 @@ paths:
               properties:
                 action:
                   type: string
-                  example: "published"
+                  example: published
                 release:
                   type: object
                 repository:
                   type: object
       responses:
         '200':
-          description: "Notification successfully sent or the event was ignored."
+          description: Notification successfully sent or the event was ignored.
         '401':
-          description: "Unauthorized. The webhook signature was missing or invalid."
+          description: Unauthorized. The webhook signature was missing or invalid.
         '500':
-          description: "Internal Server Error. The notification failed to send to Teams."
+          description: Internal Server Error. The notification failed to send to Teams.
