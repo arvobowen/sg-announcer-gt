@@ -79,13 +79,18 @@ const createCardPayload = (release, repository, releaseType) => {
             "actions": [
               {
                 "type": "Action.OpenUrl",
-                "title": "View Release Information",
+                "title": "Release Information",
                 "url": release.html_url
               },
               {
                 "type": "Action.OpenUrl",
                 "title": "Release History",
                 "url": `${repository.html_url}/releases`
+              },
+              {
+                "type": "Action.OpenUrl",
+                "title": "Issue Tracker",
+                "url": `${repository.html_url}/issues`
               }
             ],
             "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
