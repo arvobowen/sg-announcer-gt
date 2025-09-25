@@ -1,4 +1,4 @@
-// index.js - Main entry point for the SG Announcer GitHub Teams integration
+// Main entry point for the SG Announcer GitHub Teams integration
 // This module handles incoming GitHub webhooks, verifies signatures, and sends notifications to Microsoft Teams.
 
 // Import necessary modules
@@ -23,30 +23,6 @@ require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const init = () => {
   return new Promise((resolve, reject) => {
     resolve('No initialization script created.');
-
-    //// Only run this logic in a development environment
-    //if (process.env.NODE_ENV === 'development') {
-    //  console.log('[sg-announcer-gt] DEV MODE: Running swagger update script...');
-    //  
-    //  exec('npm run swagger:update', { cwd: __dirname }, (error, stdout, stderr) => {
-    //    if (error) {
-    //      console.error(`[sg-announcer-gt] Error running swagger update: ${error.message}`);
-    //      // Reject the promise on error
-    //      return reject(error);
-    //    }
-    //    if (stderr) {
-    //      // Treat stderr as a potential error and reject
-    //      console.error(`[sg-announcer-gt] Swagger update stderr: ${stderr}`);
-    //      return reject(new Error(stderr));
-    //    }
-    //    console.log(`[sg-announcer-gt] Swagger update stdout: ${stdout}`);
-    //    // Resolve the promise on success
-    //    resolve(stdout);
-    //  });
-    //} else {
-    //  // If not in dev mode, resolve immediately as there's nothing to do.
-    //  resolve('Not in development mode, skipping init script.');
-    //}
   });
 };
 

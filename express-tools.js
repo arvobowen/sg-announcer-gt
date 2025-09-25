@@ -1,4 +1,3 @@
-// File: express-tools.js
 // This module provides middleware functions for Express.js applications.
 
 // Import necessary modules
@@ -21,8 +20,6 @@ const IdentifyRequestOrigin = (req) => {
     } else {
       originString += ` | Source: Web Browser (${referer})`;
     }
-  
-    //originString += ` | User-Agent: ${userAgent}`;
   
     return originString;
 };

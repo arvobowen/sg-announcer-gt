@@ -1,4 +1,3 @@
-// msteams-tools.js
 // This module provides tools for sending messages to Microsoft Teams using Adaptive Cards.
 
 // Import necessary modules

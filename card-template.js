@@ -1,5 +1,3 @@
-// card-template.js
-
 const createCardPayload = (release, repository, releaseType) => {
     return {
       "type": "message",
