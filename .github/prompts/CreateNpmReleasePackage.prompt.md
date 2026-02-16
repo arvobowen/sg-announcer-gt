@@ -17,11 +17,20 @@ Always assume the user is doing a **PATCH release** (incrementing the third numb
 
 Provide instructions in this exact order:
 
-### 1. **Update version in package.json**
-The user should increment the version number in the package.json file. Calculate the new version based on the current version (1.1.1) and the release type (default to patch unless specified otherwise).
+### 1. **Update version in package.json and create git tag**
+Run `npm version patch` to automatically:
+- Increment the version number in package.json (e.g., 1.1.1 → 1.1.2)
+- Create a git commit with the version change
+- Create a git tag matching the version (e.g., `v1.1.2`)
 
-### 2. **Commit and push version change** (Optional but Recommended)
-Recommend committing the version bump to git and pushing it before publishing to npm. This keeps git history in sync with npm versions.
+The `npm version` command handles all of this in one step. Calculate the new version based on the current version (1.1.1) and the release type (default to patch unless specified otherwise).
+
+### 2. **Push version commit to GitHub**
+Push the commit created by `npm version patch` before publishing to npm:
+```bash
+git push origin main
+```
+This keeps git history in sync with npm versions.
 
 ### 3. **Verify NPM Authentication**
 Check if the user is logged into npm. If not, guide them through `npm login` with their npm credentials.
@@ -29,8 +38,12 @@ Check if the user is logged into npm. If not, guide them through `npm login` wit
 ### 4. **Publish to NPM Registry**
 Provide the `npm publish` command to publish the package to the npm registry. Mention that the package will be available within seconds.
 
-### 5. **Create and Push Git Tag**
-After successful npm publication, guide them to create a git tag matching the version and push it to GitHub. This maintains a connection between npm releases and git commits.
+### 5. **Push git tag to GitHub**
+After successful npm publication, push the git tag that was automatically created by `npm version patch`:
+```bash
+git push origin v1.1.2
+```
+This pushes the tag to GitHub and maintains a connection between npm releases and git commits.
 
 ### 6. **Create GitHub Release**
 Once the git tag is pushed, instruct them to create a new release on GitHub:
