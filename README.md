@@ -38,8 +38,8 @@ This is a SpiderGate Orb that requires the dependancy `spider-gate` to run.  A s
 
 ## 🎬 Demonstration
 
-![Demo](./assets/demo.png)
-![Demo New Card](./assets/demo-new-card-design.png)
+![Demo](https://raw.githubusercontent.com/arvobowen/sg-announcer-gt/main/assets/demo.png)
+![Demo New Card](https://raw.githubusercontent.com/arvobowen/sg-announcer-gt/main/assets/demo-new-card-design.png)
 
 ---
 
