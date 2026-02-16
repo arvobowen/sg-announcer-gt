@@ -1,0 +1,19 @@
+diff --git a/index.js b/index.js
+index 702bd0a..c4c6db3 100644
+--- a/index.js
++++ b/index.js
+@@ -75,7 +75,13 @@ router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res
+ 
+   // Extract the relevant data from the request body
+   const { release, repository, action } = req.body;
+-  const isReleaseEvent = action === 'published' && release;
++  
++  // Check if this is a release event (published OR edited to become a full release)
++  const isEditedToFullRelease = action === 'edited' && 
++                                !release.prerelease && 
++                                release.changes?.prerelease?.from === true;
++                                
++  const isReleaseEvent = (action === 'published' || isEditedToFullRelease) && release;
+ 
+   // Validate the requests data
+   let validationErrors = [];
