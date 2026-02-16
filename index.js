@@ -76,12 +76,10 @@ router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res
   // Extract the relevant data from the request body
   const { release, repository, action } = req.body;
   
-  // Check if this is a release event (published OR edited to become a full release)
-  const isEditedToFullRelease = action === 'edited' && 
-                                !release.prerelease && 
-                                release.changes?.prerelease?.from === true;
-                                
-  const isReleaseEvent = (action === 'published' || isEditedToFullRelease) && release;
+  // Check if this is a release event
+  // GitHub sends "released" for releases and "prereleased" for pre-releases
+  // We want to announce on both actions
+  const isReleaseEvent = (action === 'released' || action === 'prereleased') && release;
 
   // Validate the requests data
   let validationErrors = [];
@@ -144,7 +142,7 @@ router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res
 
     res.status(200).send(responsePayload);
   } else if (isReleaseEvent) {
-    console.log("Received a GitHub 'published' event.  Sending to Teams.");
+    console.log(`Received a GitHub Release event for a '${releaseType}'.  Sending to Teams.`);
     console.log(releaseInfo);
 
     // Send the notification to Microsoft Teams
