@@ -19,5 +19,25 @@
             },
             "problemMatcher": []
         }
+        {
+            "label": "Generate Release Notes",
+            "type": "shell",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\external_tools_scripts\\ReleaseNotesGenerator.bat",
+            "args": [
+                "sg-announcer-gt",
+                "package.json",
+                "${workspaceFolder}"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": []
+        }
     ]
 }

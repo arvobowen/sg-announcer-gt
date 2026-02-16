@@ -1,19 +1,74 @@
-diff --git a/index.js b/index.js
-index 702bd0a..c4c6db3 100644
---- a/index.js
-+++ b/index.js
-@@ -75,7 +75,13 @@ router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res
+diff --git a/.github/prompts/CommitCommentGenerator.prompt.md b/.github/prompts/CommitCommentGenerator.prompt.md
+index b0e5497..460c9a1 100644
+--- a/.github/prompts/CommitCommentGenerator.prompt.md
++++ b/.github/prompts/CommitCommentGenerator.prompt.md
+@@ -25,9 +25,10 @@ known GitHub syntax to automatically close them when the commit is made.
+ - Staging Command: Provide a separate code block at the very beginning of your response containing the command `git add .`.
+ - Commit Command: Provide the `git commit` command in its own separate code block at the very end of your response.
+ - Separation: Do NOT combine the `add` and `commit` commands into one block; I need to be able to click the "Copy" button on each separately.
+-
++- Ensure the commit command uses a separate -m flag for every single bullet point or paragraph to avoid terminal newline errors.
  
-   // Extract the relevant data from the request body
-   const { release, repository, action } = req.body;
--  const isReleaseEvent = action === 'published' && release;
-+  
-+  // Check if this is a release event (published OR edited to become a full release)
-+  const isEditedToFullRelease = action === 'edited' && 
-+                                !release.prerelease && 
-+                                release.changes?.prerelease?.from === true;
-+                                
-+  const isReleaseEvent = (action === 'published' || isEditedToFullRelease) && release;
- 
-   // Validate the requests data
-   let validationErrors = [];
+ ## Expected Output
+ 1. A detailed summary of the changes suitable for a human reader.
+-2. A code block containing: `git add .`
+-3. A final code block containing the full, copy-pastable `git commit` command that includes the entire summary and issue tags formatted for a terminal.
+\ No newline at end of file
++2. A first code block containing: `git add .`
++3. A second code block containing the full, copy-pastable `git commit` command that includes the entire summary and issue tags formatted for a terminal.
++4. A third and final code block containing the `git push` command to push the commit to the remote repository.
+\ No newline at end of file
+diff --git a/.vscode/tasks.json b/.vscode/tasks.json
+index 1c0bea2..04a85a1 100644
+--- a/.vscode/tasks.json
++++ b/.vscode/tasks.json
+@@ -19,5 +19,25 @@
+             },
+             "problemMatcher": []
+         }
++        {
++            "label": "Generate Release Notes",
++            "type": "shell",
++            "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\external_tools_scripts\\ReleaseNotesGenerator.bat",
++            "args": [
++                "sg-announcer-gt",
++                "package.json",
++                "${workspaceFolder}"
++            ],
++            "options": {
++                "cwd": "${workspaceFolder}"
++            },
++            "presentation": {
++                "reveal": "always",
++                "panel": "shared",
++                "showReuseMessage": false,
++                "clear": true
++            },
++            "problemMatcher": []
++        }
+     ]
+ }
+diff --git a/pending_changes.diff b/pending_changes.diff
+index 68470b6..e69de29 100644
+--- a/pending_changes.diff
++++ b/pending_changes.diff
+@@ -1,19 +0,0 @@
+-diff --git a/index.js b/index.js
+-index 702bd0a..c4c6db3 100644
+---- a/index.js
+-+++ b/index.js
+-@@ -75,7 +75,13 @@ router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res
+- 
+-   // Extract the relevant data from the request body
+-   const { release, repository, action } = req.body;
+--  const isReleaseEvent = action === 'published' && release;
+-+  
+-+  // Check if this is a release event (published OR edited to become a full release)
+-+  const isEditedToFullRelease = action === 'edited' && 
+-+                                !release.prerelease && 
+-+                                release.changes?.prerelease?.from === true;
+-+                                
+-+  const isReleaseEvent = (action === 'published' || isEditedToFullRelease) && release;
+- 
+-   // Validate the requests data
+-   let validationErrors = [];

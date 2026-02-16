@@ -25,9 +25,10 @@ known GitHub syntax to automatically close them when the commit is made.
 - Staging Command: Provide a separate code block at the very beginning of your response containing the command `git add .`.
 - Commit Command: Provide the `git commit` command in its own separate code block at the very end of your response.
 - Separation: Do NOT combine the `add` and `commit` commands into one block; I need to be able to click the "Copy" button on each separately.
-
+- Ensure the commit command uses a separate -m flag for every single bullet point or paragraph to avoid terminal newline errors.
 
 ## Expected Output
 1. A detailed summary of the changes suitable for a human reader.
-2. A code block containing: `git add .`
-3. A final code block containing the full, copy-pastable `git commit` command that includes the entire summary and issue tags formatted for a terminal.
+2. A first code block containing: `git add .`
+3. A second code block containing the full, copy-pastable `git commit` command that includes the entire summary and issue tags formatted for a terminal.
+4. A third and final code block containing the `git push` command to push the commit to the remote repository.
