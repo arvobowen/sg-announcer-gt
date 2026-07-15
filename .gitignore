@@ -14,4 +14,6 @@ yarn-error.log*
 
 # Notes
 notes.txt
-staged_changes.txt
+pending_changes.diff
+stats.json
+changes_since_last_release.log

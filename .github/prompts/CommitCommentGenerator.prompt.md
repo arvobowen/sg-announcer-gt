@@ -6,6 +6,8 @@ folder.  Create a detailed summary of the changes made that are staged and ready
 comment to commit my latest changes to the repository.
 
 ## Key Directives
+- Output **ONLY** the commit message content.
+- Do **NOT** output the prompt instructions, headers, goals, or title in your response.
 - Be concise but thorough in your summary of changes.
 - List any fixes I mention as taken care of or fixed as a follow up to this prompt.  Ensure they are included using the
 known GitHub syntax to automatically close them when the commit is made.

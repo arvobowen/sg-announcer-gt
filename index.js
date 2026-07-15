@@ -79,39 +79,42 @@ router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res
   // Check if this is a release event
   // GitHub sends "released" for releases and "prereleased" for pre-releases
   // We want to announce on both actions
-  const isReleaseEvent = (action === 'released' || action === 'prereleased') && release;
+  //const isReleaseEvent = (action === 'released' || action === 'prereleased') && release;
+  const isPublishEvent = action === 'published' && release;
 
   // Validate the requests data
   let validationErrors = [];
   if (release === null || release === undefined) {
-    validationErrors.push("Missing release data (release).");
+    validationErrors.push("Missing release data (release) from payload.");
   } else {
-    if (release.prerelease === null || release.prerelease === undefined || typeof release.prerelease !== 'boolean')
-      validationErrors.push("Missing release type (release/prerelease).");
+    if (release.prerelease === null || release.prerelease === undefined)
+      validationErrors.push("Missing release type.  (release.prerelease)");
+    if (release.prerelease !== null && release.prerelease !== undefined && typeof release.prerelease !== 'boolean')
+      validationErrors.push("Release type (release.prerelease) value is malformed.  Expected true/false.");
     if (release.name === null || release.name === undefined || release.name === "")
-      validationErrors.push("Missing release type (release/name).");
+      validationErrors.push("Missing release name.  (release.name)");
     if (release.body === null || release.body === undefined || release.body === "")
-      validationErrors.push("Missing release's body (release/body).");
+      validationErrors.push("Missing release's body.  (release.body)");
     if (release.html_url === null || release.html_url === undefined || release.html_url === "")
-      validationErrors.push("Missing release's url (release/html_url).");
+      validationErrors.push("Missing release's url (release.html_url).");
     if (release.author === null || release.author === undefined) {
-      validationErrors.push("Missing author data (release/author).");
+      validationErrors.push("Missing author data (release.author).");
     } else {
       if (release.author.avatar_url === null || release.author.avatar_url === undefined || release.author.avatar_url === "")
-        validationErrors.push("Missing author's avatar url (release/author/avatar_url).");
+        validationErrors.push("Missing author's avatar url (release.author.avatar_url).");
       if (release.author.login === null || release.author.login === undefined || release.author.login === "")
-        validationErrors.push("Missing author's login account (release/author/login).");
+        validationErrors.push("Missing author's account name (release.author.login).");
     }
   }
   if (repository === null || repository === undefined) {
     validationErrors.push("Missing repository data (repository).");
   } else {
     if (repository.full_name === null || repository.full_name === undefined || repository.full_name === "")
-      validationErrors.push("Missing repository's full name (repository/full_name).");
+      validationErrors.push("Missing repository's full name (repository.full_name).");
     if (repository.visibility === null || repository.visibility === undefined || repository.visibility === "")
-      validationErrors.push("Missing repository's visibility (repository/visibility).");
+      validationErrors.push("Missing repository's visibility (repository.visibility).");
     if (repository.html_url === null || repository.html_url === undefined || repository.html_url === "")
-      validationErrors.push("Missing repository's url (repository/html_url).");
+      validationErrors.push("Missing repository's url (repository.html_url).");
   }
   if (validationErrors.length > 0) {
     console.error(`Validation failed:\n  ${validationErrors.join('\n  ')}`);
@@ -119,12 +122,12 @@ router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res
   }
 
   // Determine the release type and the target webhook URL based on the release type
-  const isPrerelease = release.prerelease;
-  const targetWebhookUrl = isPrerelease 
+  const isBeta = release.prerelease;
+  const targetWebhookUrl = isBeta 
     ? process.env.TEAMS_PRERELEASE_WEBHOOK_URL 
     : process.env.TEAMS_RELEASE_WEBHOOK_URL;
-  const releaseType = isPrerelease ? "Pre-Release" : "Release";
-  const releaseInfo = `New ${releaseType} published: ${release.name} by ${release.author.login}`;
+  const releaseType = isBeta ? "Beta" : "Production";
+  const releaseInfo = `New ${releaseType} Release published: ${release.name} by ${release.author.login}`;
 
   // Create the payload for Microsoft Teams using the card template
   const payloadForTeams = createCardPayload(release, repository, releaseType);
@@ -141,18 +144,18 @@ router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res
     };
 
     res.status(200).send(responsePayload);
-  } else if (isReleaseEvent) {
-    console.log(`Received a GitHub Release event for a '${releaseType}'.  Sending to Teams.`);
+  } else if (isPublishEvent) {
+    console.log(`Received a GitHub Release event with a Publish action for a '${releaseType} Release'.  Sending to Teams.`);
     console.log(releaseInfo);
 
     // Send the notification to Microsoft Teams
     msTeams.SendTeamsNotification(targetWebhookUrl, payloadForTeams)
       .then(response => {
-        console.log(`Successfully sent ${releaseType} notification to Teams`);
+        console.log(`Successfully sent ${releaseType} Release notification to Teams`);
         res.status(200).send("Notification sent to Teams");
       })
       .catch(error => {
-        console.error(`Error sending ${releaseType} notification to Teams:`, error.message);
+        console.error(`Error sending ${releaseType} Release notification to Teams:`, error.message);
         res.status(500).send("Error sending notification");
       });
   } else {
