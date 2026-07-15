@@ -2,18 +2,18 @@
 
 This is an orb designed for the **[SpiderGate API Server](https://github.com/arvobowen/spider-gate)**. Its purpose is to provide a webhook endpoint that listens for release events from GitHub repositories and posts richly formatted notification cards to designated Microsoft Teams channels.
 
-This is a SpiderGate Orb that requires the dependancy `spider-gate` to run.  A simple and efficient Node.js application that listens for new GitHub releases and automatically posts formatted notifications to designated Microsoft Teams channels. It's designed to differentiate between full releases and pre-releases, routing notifications accordingly.
+This is a SpiderGate Orb that requires the dependancy `spider-gate` to run.	 A simple and efficient Node.js application that listens for new GitHub releases and automatically posts formatted notifications to designated Microsoft Teams channels. It's designed to differentiate between full releases and pre-releases, routing notifications accordingly.
 
 ---
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/arvobowen/sg-announcer-gt/main/assets/logo.png" alt="Announcer Orb Logo" width="150"/>
+	<img src="https://raw.githubusercontent.com/arvobowen/sg-announcer-gt/main/assets/logo.png" alt="Announcer Orb Logo" width="150"/>
 </div>
 
 <h1 align="center">Announcer Orb: GitHub to Teams</h1>
 
 <div align="center">
-  A SpiderGate Orb that listens for new GitHub releases and sends formatted notifications to Microsoft Teams channels.
+	A SpiderGate Orb that listens for new GitHub releases and sends formatted notifications to Microsoft Teams channels.
 </div>
 
 <div align="center">
@@ -72,3 +72,13 @@ To use this orb, you will need to add the following environment variables to you
 * `TEAMS_RELEASE_WEBHOOK_URL`: The full URL for the Incoming Webhook configured in your main "Releases" Teams channel.
 * `TEAMS_PRERELEASE_WEBHOOK_URL`: The full URL for the Incoming Webhook configured in your "Pre-releases" Teams channel.
 * `WEBHOOK_SECRET`: The strong, random string you created to secure your webhook payloads.
+
+---
+
+## 🧪 Testing Changes Pipeline
+
+1. **Open Orb:** Open the `sg-announcer-gt` source code repository in your VSCode editor and edit your `index.js` file (or any other required files).
+2. **Open SpiderGate:** Open the `spider-gate` source code repository in a separate VSCode window.
+3. **Open Terminal:** Open the integrated terminal in the SpiderGate VSCode window using `Ctrl` + `\`` (Control + Backtick).
+4. **Link Orb:** Type the command `npm run link sg-announcer-gt` to automatically create the symlink and connect your local orb to the core server.
+5. **Start Server:** Run `npm run dev` in the SpiderGate terminal to start the server. This will dynamically load your linked orb so you can test it locally.
