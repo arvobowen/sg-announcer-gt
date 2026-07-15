@@ -143,5 +143,6 @@ npm update sg-announcer-gt
 **5. Restart PM2 Service**  
 Restart the SpiderGate core service so it picks up the newly updated orb files on initialization.
 ```bash
-pm2 restart spidergate
+pm2 status
+pm2 restart spider-gate
 ```
