@@ -77,8 +77,70 @@ To use this orb, you will need to add the following environment variables to you
 
 ## 🧪 Testing Changes Pipeline
 
-1. **Open Orb:** Open the `sg-announcer-gt` source code repository in your VSCode editor and edit your `index.js` file (or any other required files).
-2. **Open SpiderGate:** Open the `spider-gate` source code repository in a separate VSCode window.
-3. **Open Terminal:** Open the integrated terminal in the SpiderGate VSCode window using `Ctrl` + `\`` (Control + Backtick).
-4. **Link Orb:** Type the command `npm run link sg-announcer-gt` to automatically create the symlink and connect your local orb to the core server.
-5. **Start Server:** Run `npm run dev` in the SpiderGate terminal to start the server. This will dynamically load your linked orb so you can test it locally.
+**1. Open Orb Repository** (sg-announcer-gt)  
+Open the `sg-announcer-gt` source code repository in your VSCode editor and edit your `index.js` file (or any other required files).
+
+**2. Open SpiderGate Repository** (spidergate)  
+Open the `spider-gate` source code repository in a separate VSCode window.
+
+**3. Open Terminal** (spidergate)  
+Open the integrated terminal in the SpiderGate VSCode window using the keyboard shortcut:
+```bash
+Ctrl + `
+```
+
+**4. Link the Orb** (spidergate)  
+Run the following command to automatically create the symlink and connect your local orb to the core server:
+```bash
+npm run link sg-announcer-gt
+```
+
+**5. Fix Package Vulnerabilities (If Prompted)** (spidergate)  
+If the output from the link command warns you about vulnerabilities (e.g., "6 vulnerabilities (3 moderate, 3 high)"), address them by running:
+```bash
+npm audit fix
+```
+
+**6. Start the Server** (spidergate)  
+Run the development script in the SpiderGate terminal to start the server. This will dynamically load your linked orb so you can test it locally:
+```bash
+npm run dev
+```
+
+---
+
+## 🚀 Deployment
+
+**1. Bump Version & Push to GitHub**  
+Update your package version (patch, minor, or major) and push your latest code to the repository.
+```bash
+npm version patch
+git add .
+git commit -m "Prepare new release"
+git push
+```
+
+**2. Publish the Package**  
+Publish the newly versioned orb to the npm registry so the Ubuntu server can pull it down.
+```bash
+npm publish
+```
+
+**3. SSH & Access Server Directory**  
+Connect to your Ubuntu server, switch to the dedicated `spidergate` user account, and navigate to the core server directory.
+```bash
+sudo -i -u spidergate
+cd ~/server
+```
+
+**4. Update the Orb**  
+Install the latest version of the orb package that you just published.
+```bash
+npm update sg-announcer-gt
+```
+
+**5. Restart PM2 Service**  
+Restart the SpiderGate core service so it picks up the newly updated orb files on initialization.
+```bash
+pm2 restart spidergate
+```
