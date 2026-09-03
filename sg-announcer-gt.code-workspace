@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "spider-gate",
+			"path": "../spider-gate"
+		},
+		{
+			"name": "sg-announcer-gt",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
