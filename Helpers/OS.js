@@ -10,18 +10,18 @@ const createOrFindFolder = (folderPath) => {
 };
 
 const getDataDir = (appName) => {
-    const persistentFolderName = 'sg-docketsafe-updates';
+    const persistentFolderName = 'sg-announcer-gt';
     let dataDir;
 
     // Get dataDir based on the operating system
     if (os.platform() === 'win32') {
         // Windows: Uses the %ALLUSERSPROFILE% environment variable (Defaults to C:\ProgramData)
-        // Example: C:\ProgramData\SpiderGate\Assets
+        // Example: C:\ProgramData\SpiderGate\sg-announcer-gt
         const programData = process.env.ALLUSERSPROFILE || 'C:\\ProgramData';
         dataDir = path.join(programData, appName, persistentFolderName);
     } else {
         // Linux/Ubuntu: Standard directory for persistent application data
-        // Example: /var/lib/spidergate/assets
+        // Example: /var/lib/spidergate/sg-announcer-gt
         dataDir = path.join('/var/lib', appName.toLowerCase(), persistentFolderName.toLowerCase());
     }
 
