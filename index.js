@@ -1,168 +1,99 @@
-// Main entry point for the SG Announcer GitHub Teams integration
-// This module handles incoming GitHub webhooks, verifies signatures, and sends notifications to Microsoft Teams.
+/**
+ * Summary: Main entry point for the SG Announcer GitHub Teams integration
+ * Description: This module handles incoming GitHub webhooks, verifies signatures, and sends notifications to Microsoft Teams.
+ */
 
-// Import necessary modules
+// Node.js built-in module includes
 const path = require('path');
-const crypto = require('crypto');
+const fs = require('fs');
+
+// Third party module includes
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const yaml = require('js-yaml');
-const fs = require('fs');
-const statsTracker = require('./stats-tracker');
-const { createCardPayload } = require('./card-template');
-const { exec } = require('child_process');
-const expTools = require('./express-tools');
-const { executionAsyncResource } = require('async_hooks');
-const msTeams = require('./msteams-tools');
-const e = require('express');
 
-// Load environment variables from the .env file
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
-// An optional init function that returns a Promise
+// Determine the data directory for persistent storage
+const { getDataDir } = require('./Helpers/OS');
+const dataDir = getDataDir('SpiderGate');
+
+// Run strict environment validation FIRST. If it fails, an error is thrown and SpiderGate catches it immediately.
+const { validateAndLoadEnv } = require('./Helpers/EnvManager');
+validateAndLoadEnv(dataDir);
+
+
+// Middleware
+const identity = require('./middleware/identity');
+const statsTracker = require('./middleware/statsTracker');
+
+
+// Controllers
+const publicController = require('./controllers/public');
+
+
+// Webhooks (third party integrations)
+const { setupWebhookRoutes } = require('./webhooks/setupWebhookRoutes');
+
+
+// Load the webhook secret from the environment variables after validating and loading the .env file
+const secret = process.env.WEBHOOK_SECRET || null;
+
+// Fail fast if the webhook secret is missing
+if (!secret) {
+  throw new Error('Unable to load orb due to missing WEBHOOK_SECRET value in the .env file.');
+}
+
+// An optional init function that is called by spidergate which returns a Promise
 const init = () => {
   return new Promise((resolve, reject) => {
     resolve('No initialization script created.');
   });
 };
 
-// Create an Express Router
 const router = express.Router();
-
-
-// --- Middleware ---
-
-// Check for required environment variables
-if (!process.env.WEBHOOK_SECRET) {
-  console.error('Error: WEBHOOK_SECRET is not defined in the environment variables.');
-  process.exit(1);
-}
-if (!process.env.TEAMS_RELEASE_WEBHOOK_URL) {
-  console.error('Error: TEAMS_RELEASE_WEBHOOK_URL is not defined in the environment variables.');
-  process.exit(1);
-}
-if (!process.env.TEAMS_PRERELEASE_WEBHOOK_URL) {
-  console.error('Error: TEAMS_PRERELEASE_WEBHOOK_URL is not defined in the environment variables.');
-  process.exit(1);
-}
 
 // Serve static files (like logo.png and stats-client.js) from this orb's 'public' folder
 router.use(express.static(path.join(__dirname, 'public')));
 
-// Serve Swagger UI at /docs
+
+
+// --- GLOBAL UMBRELLA (middleware used for all requests) ---
+// Inject clean IP and origin strings into EVERY request
+router.use(identity.requestOrigin);
+
+
+
+// --- ROUTES: PUBLIC ---
+// GET / : Serve the index.html landing page explicitly
+router.get('/', publicController.getLandingPage);
+
+
+
+// --- ROUTES: SWAGGER UI (API TESTING AND DOCUMENTATION) ---
 const swaggerDocument = yaml.load(fs.readFileSync(path.join(__dirname, 'swagger.yaml'), 'utf8'));
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
-// --- Routes ---
 
-// GET / : Serve the index.html landing page
-router.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+// --- ROUTES: STATISTICS/METRICS ---
+// GET /stats : Provides statistics data to the landing page
+router.get('/stats', publicController.getStats);
 
-// GET /stats : Endpoint to provide statistics data
-router.get('/stats', (req, res) => {
-  res.json(statsTracker.getStats());
-});
 
-// POST / : The main webhook receiver that identifies swagger requests, verifies the GitHub signature, and processes release events.
-router.post('/', expTools.CheckSwagger, expTools.CheckGitHubSignature, (req, res) => {
-  // Track incoming requests
-  const referer = expTools.IdentifyRequestOrigin(req);
-  console.log(`New incoming request, referer: ${referer}`); 
-  statsTracker.incrementRequestCount();
 
-  // Extract the relevant data from the request body
-  const { release, repository, action } = req.body;
-  
-  // Check if this is a release event
-  // GitHub sends "released" for releases and "prereleased" for pre-releases
-  // We want to announce on both actions
-  //const isReleaseEvent = (action === 'released' || action === 'prereleased') && release;
-  const isPublishEvent = action === 'published' && release;
+// --- GLOBAL API UMBRELLA (track request statistics for EVERY request) ---
+router.use('/api/v1', statsTracker.recordRequest);
 
-  // Validate the requests data
-  let validationErrors = [];
-  if (release === null || release === undefined) {
-    validationErrors.push("Missing release data (release) from payload.");
-  } else {
-    if (release.prerelease === null || release.prerelease === undefined)
-      validationErrors.push("Missing release type.  (release.prerelease)");
-    if (release.prerelease !== null && release.prerelease !== undefined && typeof release.prerelease !== 'boolean')
-      validationErrors.push("Release type (release.prerelease) value is malformed.  Expected true/false.");
-    if (release.name === null || release.name === undefined || release.name === "")
-      validationErrors.push("Missing release name.  (release.name)");
-    if (release.body === null || release.body === undefined || release.body === "")
-      validationErrors.push("Missing release's body.  (release.body)");
-    if (release.html_url === null || release.html_url === undefined || release.html_url === "")
-      validationErrors.push("Missing release's url (release.html_url).");
-    if (release.author === null || release.author === undefined) {
-      validationErrors.push("Missing author data (release.author).");
-    } else {
-      if (release.author.avatar_url === null || release.author.avatar_url === undefined || release.author.avatar_url === "")
-        validationErrors.push("Missing author's avatar url (release.author.avatar_url).");
-      if (release.author.login === null || release.author.login === undefined || release.author.login === "")
-        validationErrors.push("Missing author's account name (release.author.login).");
-    }
-  }
-  if (repository === null || repository === undefined) {
-    validationErrors.push("Missing repository data (repository).");
-  } else {
-    if (repository.full_name === null || repository.full_name === undefined || repository.full_name === "")
-      validationErrors.push("Missing repository's full name (repository.full_name).");
-    if (repository.visibility === null || repository.visibility === undefined || repository.visibility === "")
-      validationErrors.push("Missing repository's visibility (repository.visibility).");
-    if (repository.html_url === null || repository.html_url === undefined || repository.html_url === "")
-      validationErrors.push("Missing repository's url (repository.html_url).");
-  }
-  if (validationErrors.length > 0) {
-    console.error(`Validation failed:\n  ${validationErrors.join('\n  ')}`);
-    return res.status(400).send(`Validation failed:\n  ${validationErrors.join('\n  ')}`);
-  }
 
-  // Determine the release type and the target webhook URL based on the release type
-  const isBeta = release.prerelease;
-  const targetWebhookUrl = isBeta 
-    ? process.env.TEAMS_PRERELEASE_WEBHOOK_URL 
-    : process.env.TEAMS_RELEASE_WEBHOOK_URL;
-  const releaseType = isBeta ? "Beta" : "Production";
-  const releaseInfo = `New ${releaseType} Release published: ${release.name} by ${release.author.login}`;
 
-  // Create the payload for Microsoft Teams using the card template
-  const payloadForTeams = createCardPayload(release, repository, releaseType);
+// --- ROUTES: WEBHOOKS ---
+// Setup third-party webhook routes that do not require authentication
+// (such as incoming requests from GitHub or Stripe)
+// /api/v1/webhooks/* is the base path for all webhook routes
+// Note: See "webhooks" folder for the actual supported route handlers
+setupWebhookRoutes(router);
 
-  if (req.isSwaggerTest) {
-    console.log("Received a Swagger test event.  Not sending to Teams.");
-    console.log(releaseInfo);
 
-    // A JSON object containing all the information you want to return
-    const responsePayload = {
-      message: "Swagger test successful.",
-      releaseInfo: releaseInfo,
-      payloadForTeams: payloadForTeams
-    };
-
-    res.status(200).send(responsePayload);
-  } else if (isPublishEvent) {
-    console.log(`Received a GitHub Release event with a Publish action for a '${releaseType} Release'.  Sending to Teams.`);
-    console.log(releaseInfo);
-
-    // Send the notification to Microsoft Teams
-    msTeams.SendTeamsNotification(targetWebhookUrl, payloadForTeams)
-      .then(response => {
-        console.log(`Successfully sent ${releaseType} Release notification to Teams`);
-        res.status(200).send("Notification sent to Teams");
-      })
-      .catch(error => {
-        console.error(`Error sending ${releaseType} Release notification to Teams:`, error.message);
-        res.status(500).send("Error sending notification");
-      });
-  } else {
-    console.log("Received a non-supported event, ignoring.");
-    res.status(200).send("Unsupported event received and ignored.");
-  }
-});
 
 // Export the router and the path for the core server to use
 module.exports = {
