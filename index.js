@@ -35,14 +35,20 @@ const publicController = require('./controllers/public');
 const { setupWebhookRoutes } = require('./webhooks/setupWebhookRoutes');
 
 
-// Load the webhook secret from the environment variables after validating and loading the .env file
-const secret = process.env.WEBHOOK_SECRET || null;
+// Express router for handling orb-specific routes
+const router = express.Router();
 
-// Fail fast if the webhook secret is missing
+
+// Load the webhook secret from the environment variables after validating and loading
+// the .env file the fail fast if the webhook secret is missing
+const secret = process.env.WEBHOOK_SECRET || null;
 if (!secret) {
   throw new Error('Unable to load orb due to missing WEBHOOK_SECRET value in the .env file.');
 }
 
+
+
+// --- INITIALIZATION FUNCTION (OPTIONAL) ---
 // An optional init function that is called by spidergate which returns a Promise
 const init = () => {
   return new Promise((resolve, reject) => {
@@ -50,8 +56,9 @@ const init = () => {
   });
 };
 
-const router = express.Router();
 
+
+// --- STATIC FILES ---
 // Serve static files (like logo.png and stats-client.js) from this orb's 'public' folder
 router.use(express.static(path.join(__dirname, 'public')));
 
