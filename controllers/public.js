@@ -6,6 +6,12 @@
 const path = require('path');
 const statsTracker = require('../Helpers/Statistics');
 
+// Initialize the public controller with the provided configuration
+const initializeController = (config) => {
+	// Initalize the stats tracker with the provided configuration
+	statsTracker.initializeStatistics(config);
+};
+
 // Endpoint that serves the index.html landing page
 const getLandingPage = (req, res) => {
 	res.sendFile(path.join(__dirname, '../public', 'index.html'));
@@ -17,6 +23,7 @@ const getStats = (req, res) => {
 };
 
 module.exports = {
+	initializeController,
 	getLandingPage,
 	getStats
 };

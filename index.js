@@ -18,17 +18,20 @@ const { getDataDir } = require('./Helpers/OS');
 const dataDir = getDataDir('SpiderGate');
 
 // Run strict environment validation FIRST. If it fails, an error is thrown and SpiderGate catches it immediately.
+let orbConfig = {};
 const { validateAndLoadEnv } = require('./Helpers/EnvManager');
-validateAndLoadEnv(dataDir);
+orbConfig = validateAndLoadEnv(dataDir);
 
 
 // Middleware
 const identity = require('./middleware/identity');
 const statsTracker = require('./middleware/statsTracker');
+statsTracker.initializeController(orbConfig);
 
 
 // Controllers
 const publicController = require('./controllers/public');
+publicController.initializeController(orbConfig);
 
 
 // Webhooks (third party integrations)
@@ -37,6 +40,12 @@ const { setupWebhookRoutes } = require('./webhooks/setupWebhookRoutes');
 
 // Express router for handling orb-specific routes
 const router = express.Router();
+
+// Inject orbConfig into every request for easy access within route handlers
+router.use((req, res, next) => {
+  req.orbConfig = orbConfig;
+  next();
+});
 
 
 // Load the webhook secret from the environment variables after validating and loading
