@@ -5,7 +5,7 @@ let statsFilePath;
 const stats = {
   sessionRequests: 0,
   startTime: new Date(),
-  allTimeRequests: readStatsFromFile().allTimeRequests,
+  allTimeRequests: null,
 };
 
 // Utility function to create a folder if it doesn't exist
