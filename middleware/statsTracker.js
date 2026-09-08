@@ -1,7 +1,7 @@
 const statistics = require('../Helpers/Statistics');
 
-// Initialize the stats tracker controller with the provided configuration
-const initializeController = (config) => {
+// Initialize the stats tracker middleware with the provided configuration
+const initializeMiddleware = (config) => {
 	statistics.initializeStatistics(config);
 };
 
@@ -12,6 +12,6 @@ const recordRequest = (req, res, next) => {
 };
 
 module.exports = {
-	initializeController,
+	initializeMiddleware,
 	recordRequest
 };

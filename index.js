@@ -26,7 +26,7 @@ orbConfig = validateAndLoadEnv(dataDir);
 // Middleware
 const identity = require('./middleware/identity');
 const statsTracker = require('./middleware/statsTracker');
-statsTracker.initializeController(orbConfig);
+statsTracker.initializeMiddleware(orbConfig);
 
 
 // Controllers
