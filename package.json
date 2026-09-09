@@ -1,7 +1,8 @@
 {
   "name": "sg-announcer-gt",
-  "version": "1.26251.2",
+  "version": "1.26252.0",
   "description": "A SpiderGate Orb that listens for new GitHub releases and sends formatted notifications to Microsoft Teams channels.",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "version-bump": "node update-version.js",

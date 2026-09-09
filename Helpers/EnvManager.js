@@ -53,6 +53,10 @@ const validateAndLoadEnv = (orbDir) => {
 
     // If we reach here, the file is perfect. Load it into process.env!
     dotenv.config({ path: envPath });
+
+    // Return the parsed configuration for potential further use
+    // This would be only THIS app's runtime environment
+    return parsedConfig;
 };
 
 module.exports = {

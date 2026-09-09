@@ -15,23 +15,19 @@ const yaml = require('js-yaml');
 
 // Determine the data directory for persistent storage
 const { getDataDir } = require('./Helpers/OS');
-const dataDir = getDataDir('SpiderGate');
 
 // Run strict environment validation FIRST. If it fails, an error is thrown and SpiderGate catches it immediately.
 let orbConfig = {};
 const { validateAndLoadEnv } = require('./Helpers/EnvManager');
-orbConfig = validateAndLoadEnv(dataDir);
 
 
 // Middleware
 const identity = require('./middleware/identity');
 const statsTracker = require('./middleware/statsTracker');
-statsTracker.initializeMiddleware(orbConfig);
 
 
 // Controllers
 const publicController = require('./controllers/public');
-publicController.initializeController(orbConfig);
 
 
 // Webhooks (third party integrations)
@@ -46,24 +42,6 @@ router.use((req, res, next) => {
   req.orbConfig = orbConfig;
   next();
 });
-
-
-// Load the webhook secret from the environment variables after validating and loading
-// the .env file the fail fast if the webhook secret is missing
-const secret = process.env.WEBHOOK_SECRET || null;
-if (!secret) {
-  throw new Error('Unable to load orb due to missing WEBHOOK_SECRET value in the .env file.');
-}
-
-
-
-// --- INITIALIZATION FUNCTION (OPTIONAL) ---
-// An optional init function that is called by spidergate which returns a Promise
-const init = () => {
-  return new Promise((resolve, reject) => {
-    resolve('No initialization script created.');
-  });
-};
 
 
 
@@ -108,6 +86,54 @@ router.use('/api/v1', statsTracker.recordRequest);
 // /api/v1/webhooks/* is the base path for all webhook routes
 // Note: See "webhooks" folder for the actual supported route handlers
 setupWebhookRoutes(router);
+
+
+
+// --- INITIALIZATION FUNCTION (OPTIONAL) ---
+// An optional init function that is called by spidergate which returns a Promise
+const init = (sgContext = {}) => {
+  return new Promise(async (resolve, reject) => {
+    // Extract the injected logger, fallback to console if not provided
+    const log = sgContext.log || console;
+
+    try {
+      log.message("sg-announcer-gt orb initializing...");
+
+      // Resolve the data directory for the orb and ensure it exists
+      const dataDir = getDataDir('SpiderGate');
+      log.message('\tData directory resolved to:');
+      log.info(`\t > ${dataDir}`);
+
+      // Validate and load the environment configuration for the orb
+      orbConfig = validateAndLoadEnv(dataDir, log);
+      log.success(`\tOrb configuration loaded successfully.`);
+
+      // Initialize the middleware modules with the orb configuration
+      statsTracker.initializeMiddleware(orbConfig);
+      log.success(`\tMiddleware modules initialized successfully.`);
+
+      // Initialize the controller modules with the orb configuration
+      publicController.initializeController(orbConfig);
+      log.success(`\tController modules initialized successfully.`);
+
+      // Load the webhook secret from the environment variables after validating and loading
+      // the .env file the fail fast if the webhook secret is missing
+      const secret = orbConfig.WEBHOOK_SECRET || null;
+      if (!secret) {
+        throw new Error('Unable to load orb due to missing WEBHOOK_SECRET value in the .env file.');
+      }
+      log.success(`\tGitHub webhook secret key loaded successfully.`);
+
+      log.success("sg-announcer-gt orb initialized successfully.");
+      resolve('sg-announcer-gt initialized.');
+    } catch (error) {
+      log.error(`Initialization failed and orb not loaded: ${error.message}`);
+
+      // Rejecting this promise prevents SpiderGate from loading the orb
+      reject(error);
+    }
+  });
+};
 
 
 

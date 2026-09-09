@@ -5,7 +5,7 @@ let statsFilePath;
 const stats = {
   sessionRequests: 0,
   startTime: new Date(),
-  allTimeRequests: null,
+  allTimeRequests: null
 };
 
 // Utility function to create a folder if it doesn't exist
@@ -44,8 +44,6 @@ const initializeStatistics = (config) => {
 // doesn't exist or an error occurs, returns default stats.
 const readStatsFromFile = () => {
   try {
-    const statsFilePath = path.join(req.orbConfig.TRACKING_STATS_PATH, 'ApiRequests.json');
-
     if (fs.existsSync(statsFilePath)) {
       const data = fs.readFileSync(statsFilePath);
       return JSON.parse(data);
@@ -59,8 +57,6 @@ const readStatsFromFile = () => {
 // Writes the current statistics to the file. If an error occurs, it logs the error.
 const writeStatsToFile = () => {
   try {
-    const statsFilePath = path.join(req.orbConfig.TRACKING_STATS_PATH, 'ApiRequests.json');
-
     const dataToWrite = JSON.stringify({ allTimeRequests: stats.allTimeRequests });
     fs.writeFileSync(statsFilePath, dataToWrite);
   } catch (error) {
