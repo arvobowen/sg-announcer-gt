@@ -10,7 +10,7 @@ const REQUIRED_KEYS = [
     'TRACKING_STATS_PATH'
 ];
 
-const validateAndLoadEnv = (orbDir) => {
+const validateAndLoadEnv = (orbDir, log) => {
     const envPath = path.join(orbDir, '.env');
 
     // Log the directory being used for the .env file
