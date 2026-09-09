@@ -97,7 +97,7 @@ const init = (sgContext = {}) => {
     const log = sgContext.log || console;
 
     try {
-      log.message("sg-announcer-gt orb initializing...");
+      log.message("\tsg-announcer-gt orb initializing...");
 
       // Resolve the data directory for the orb and ensure it exists
       const dataDir = getDataDir('SpiderGate');
@@ -124,8 +124,8 @@ const init = (sgContext = {}) => {
       }
       log.success(`\tGitHub webhook secret key loaded successfully.`);
 
-      log.success("sg-announcer-gt orb initialized successfully.");
-      resolve('sg-announcer-gt initialized.');
+      log.success("\tsg-announcer-gt orb initialized successfully.");
+      resolve('orb initialization complete.');
     } catch (error) {
       log.error(`Initialization failed and orb not loaded: ${error.message}`);
 

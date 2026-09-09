@@ -13,6 +13,10 @@ const REQUIRED_KEYS = [
 const validateAndLoadEnv = (orbDir) => {
     const envPath = path.join(orbDir, '.env');
 
+    // Log the directory being used for the .env file
+    log.message('\tValidating and loading .env file...');
+    log.info(`\t > ${envPath}`);
+
     // If the file doesn't exist at all, create it with empty defaults
     if (!fs.existsSync(envPath)) {
         const defaultEnv = REQUIRED_KEYS.map(key => `${key}=`).join('\n');
