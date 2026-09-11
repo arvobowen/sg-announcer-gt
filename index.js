@@ -22,7 +22,6 @@ const { validateAndLoadEnv } = require('./Helpers/EnvManager');
 
 
 // Middleware
-const identity = require('./middleware/identity');
 const statsTracker = require('./middleware/statsTracker');
 
 
@@ -48,12 +47,6 @@ router.use((req, res, next) => {
 // --- STATIC FILES ---
 // Serve static files (like logo.png and stats-client.js) from this orb's 'public' folder
 router.use(express.static(path.join(__dirname, 'public')));
-
-
-
-// --- GLOBAL UMBRELLA (middleware used for all requests) ---
-// Inject clean IP and origin strings into EVERY request
-router.use(identity.requestOrigin);
 
 
 
